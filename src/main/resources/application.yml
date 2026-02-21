@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: agentic-sdlc-demo
+
+logging:
+  level:
+    com.example.api: DEBUG
+    org.springframework.web: INFO
