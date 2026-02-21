@@ -1,16 +1,15 @@
-package com.example.api.controller;
+package com.devarch.agenticsdlc.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.example.api.dto.CreateProductRequest;
-import com.example.api.dto.ProductDto;
-import com.example.api.exception.GlobalExceptionHandler;
-import com.example.api.exception.ProductNotFoundException;
-import com.example.api.mapper.ProductMapper;
-import com.example.api.model.Product;
-import com.example.api.service.ProductService;
+import com.devarch.agenticsdlc.dto.CreateProductRequest;
+import com.devarch.agenticsdlc.dto.ProductDto;
+import com.devarch.agenticsdlc.exception.ProductNotFoundException;
+import com.devarch.agenticsdlc.mapper.ProductMapper;
+import com.devarch.agenticsdlc.model.Product;
+import com.devarch.agenticsdlc.service.ProductService;
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

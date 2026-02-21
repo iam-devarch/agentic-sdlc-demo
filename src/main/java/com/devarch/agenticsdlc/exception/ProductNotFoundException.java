@@ -1,4 +1,4 @@
-package com.example.api.exception;
+package com.devarch.agenticsdlc.exception;
 
 /**
  * Exception thrown when a requested product is not found.

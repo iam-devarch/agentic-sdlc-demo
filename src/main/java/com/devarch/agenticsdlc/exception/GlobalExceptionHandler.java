@@ -1,9 +1,9 @@
-package com.example.api.exception;
+package com.devarch.agenticsdlc.exception;
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-import com.example.api.dto.ErrorResponse;
+import com.devarch.agenticsdlc.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

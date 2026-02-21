@@ -1,4 +1,4 @@
-package com.example.api.dto;
+package com.devarch.agenticsdlc.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package com.example.api.service;
+package com.devarch.agenticsdlc.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.example.api.dto.CreateProductRequest;
-import com.example.api.exception.ProductNotFoundException;
-import com.example.api.mapper.ProductMapper;
-import com.example.api.model.Product;
+import com.devarch.agenticsdlc.dto.CreateProductRequest;
+import com.devarch.agenticsdlc.exception.ProductNotFoundException;
+import com.devarch.agenticsdlc.mapper.ProductMapper;
+import com.devarch.agenticsdlc.model.Product;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
-package com.example.api.mapper;
+package com.devarch.agenticsdlc.mapper;
 
-import com.example.api.dto.CreateProductRequest;
-import com.example.api.dto.ProductDto;
-import com.example.api.model.Product;
+import com.devarch.agenticsdlc.dto.CreateProductRequest;
+import com.devarch.agenticsdlc.dto.ProductDto;
+import com.devarch.agenticsdlc.model.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

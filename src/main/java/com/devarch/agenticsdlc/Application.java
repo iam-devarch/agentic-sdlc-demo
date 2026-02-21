@@ -1,4 +1,4 @@
-package com.example.api;
+package com.devarch.agenticsdlc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

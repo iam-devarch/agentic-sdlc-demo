@@ -1,4 +1,4 @@
-package com.example.api.model;
+package com.devarch.agenticsdlc.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

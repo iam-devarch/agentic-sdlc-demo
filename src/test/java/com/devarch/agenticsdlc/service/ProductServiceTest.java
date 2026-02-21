@@ -1,12 +1,12 @@
-package com.example.api.service;
+package com.devarch.agenticsdlc.service;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.example.api.dto.CreateProductRequest;
-import com.example.api.exception.ProductNotFoundException;
-import com.example.api.mapper.ProductMapper;
-import com.example.api.model.Product;
+import com.devarch.agenticsdlc.dto.CreateProductRequest;
+import com.devarch.agenticsdlc.exception.ProductNotFoundException;
+import com.devarch.agenticsdlc.mapper.ProductMapper;
+import com.devarch.agenticsdlc.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

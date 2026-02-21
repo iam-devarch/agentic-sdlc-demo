@@ -1,11 +1,11 @@
-package com.example.api.mapper;
+package com.devarch.agenticsdlc.mapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.example.api.dto.CreateProductRequest;
-import com.example.api.dto.ProductDto;
-import com.example.api.model.Product;
+import com.devarch.agenticsdlc.dto.CreateProductRequest;
+import com.devarch.agenticsdlc.dto.ProductDto;
+import com.devarch.agenticsdlc.model.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
