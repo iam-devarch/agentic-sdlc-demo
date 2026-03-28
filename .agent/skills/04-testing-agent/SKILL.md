@@ -83,6 +83,54 @@ mvn test
 
 Fix any test failures before marking this skill as complete.
 
+### TESTING_005 — Generate API Contract Tests
+
+**Input**: `src/main/resources/api/{feature}-api.yaml`, implemented Controller  
+**Output**: `src/test/java/com/devarch/agenticsdlc/contract/{Feature}ContractTest.java`
+
+Create **contract tests** that validate the running API conforms to the OpenAPI specification. These tests ensure there is no drift between what the spec defines and what the implementation returns.
+
+Use `@SpringBootTest` with a real server port and `TestRestTemplate`:
+
+```java
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class ProductContractTest {
+
+    @Autowired
+    private TestRestTemplate restTemplate;
+
+    @Test
+    void createProduct_shouldReturn201WithExpectedSchema() {
+        var request = Map.of("name", "Contract Test Product", "price", 19.99);
+        var response = restTemplate.postForEntity("/api/v1/products", request, Map.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody()).containsKeys("id", "name", "price", "createdAt", "updatedAt");
+    }
+
+    @Test
+    void getProduct_shouldReturn404WithErrorResponseSchema() {
+        var response = restTemplate.getForEntity("/api/v1/products/99999", Map.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).containsKeys("timestamp", "status", "error", "message", "path");
+    }
+
+    // Test all endpoints match the OpenAPI spec:
+    // - Correct HTTP status codes
+    // - Response body has all fields defined in the spec
+    // - Required fields are present and non-null
+    // - Field types match (string, number, integer, etc.)
+}
+```
+
+**What contract tests validate**:
+- HTTP status codes match the spec
+- Response body structure matches the schema
+- Required fields are present
+- Error responses follow the standard `ErrorResponse` format
+- Content-Type headers are correct
+
 ## Rules
 
 1. **Test naming**: Use descriptive method names:
@@ -124,4 +172,6 @@ Fix any test failures before marking this skill as complete.
 - `*ControllerTest.java` exists in `src/test/java/.../controller/`
 - `*ServiceTest.java` exists in `src/test/java/.../service/`
 - `*MapperTest.java` exists in `src/test/java/.../mapper/`
+- `*ContractTest.java` exists in `src/test/java/.../contract/`
 - `mvn test` passes with zero failures
+

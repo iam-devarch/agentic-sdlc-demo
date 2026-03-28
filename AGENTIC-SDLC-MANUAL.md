@@ -1,29 +1,33 @@
 # Agentic SDLC Manual
 
-This document describes the **Agentic Software Development Lifecycle (SDLC)** process used in this project. AI agents are orchestrated through well-defined phases to develop production-quality Spring Boot microservices.
+This document describes the **Agentic Software Development Lifecycle (SDLC)** process used in this project. AI agents are orchestrated through well-defined phases to develop production-quality Spring Boot microservices using **spec-driven development**.
 
 ---
 
 ## Overview
 
-The Agentic SDLC replaces traditional manual development with a **phase-driven, agent-orchestrated** approach. Each phase has a dedicated agent with specific skills, inputs, and outputs.
+The Agentic SDLC replaces traditional manual development with a **phase-driven, agent-orchestrated** approach. Each phase has a dedicated agent with specific skills, inputs, and outputs. The OpenAPI specification serves as the **single source of truth** — code is generated from the spec, not manually written.
 
 ```
 Feature Request
      │
      ▼
-┌─────────────┐     ┌──────────────┐     ┌──────────────┐
-│  PLANNING   │────▶│    DESIGN    │────▶│    CODING    │
-│   Agent     │     │    Agent     │     │    Agent     │
-└─────────────┘     └──────────────┘     └──────────────┘
-                                               │
-     ┌─────────────┐     ┌──────────────┐      │
-     │   DEVOPS    │◀────│   TESTING   │◀─────┘
-     │   Agent     │     │    Agent     │
-     └─────────────┘     └──────────────┘
+┌─────────────┐     ┌──────────────┐     ┌────────────────┐     ┌────────────────┐
+│  PLANNING   │────▶│    DESIGN    │────▶│ SPEC VALIDATION│────▶│CODE GENERATION │
+│   Agent     │     │    Agent     │     │    Agent  ⭐    │     │   Agent  ⭐     │
+└─────────────┘     └──────────────┘     └────────────────┘     └────────────────┘
+                           ▲                    │                       │
+                           └── Fail? ───────────┘                      │
+                                                                       ▼
+     ┌─────────────┐     ┌──────────────┐                      ┌──────────────┐
+     │   DEVOPS    │◀────│   TESTING   │◀─────────────────────│    CODING    │
+     │   Agent     │     │    Agent     │                      │    Agent     │
+     └─────────────┘     └──────────────┘                      └──────────────┘
+                                │                                      ▲
+                                └────── Fail? ─────────────────────────┘
 ```
 
-The **Orchestrator Agent** coordinates the entire flow.
+The **Orchestrator Agent** coordinates the entire flow with feedback loops.
 
 ---
 
@@ -47,18 +51,40 @@ The **Orchestrator Agent** coordinates the entire flow.
 | DESIGN_001  | Design a REST API contract from planning documents   | `docs/design/DESIGN-{FEATURE}.md`               |
 | DESIGN_002  | Create an OpenAPI 3.0 specification                  | `src/main/resources/api/{feature}-api.yaml`      |
 
-### 3. Coding Phase
+### 3. Spec Validation Phase ⭐
+
+**Agent**: `02a-spec-validation-agent`
+
+| Skill ID     | Description                                                  | Output                              |
+|--------------|--------------------------------------------------------------|--------------------------------------|
+| SPECVAL_001  | Validate OpenAPI spec against OAS 3.0/3.1 schema            | Validation report (pass/fail)       |
+| SPECVAL_002  | Lint API against enterprise design rules and standards       | Lint report with errors/warnings    |
+| SPECVAL_003  | Check backwards compatibility against previous spec version  | Compatibility report                |
+
+**Gate**: If validation fails, route back to **Design Phase** to fix the spec.
+
+### 4. Code Generation Phase ⭐
+
+**Agent**: `02b-codegen-agent`
+
+| Skill ID     | Description                                                     | Output                                      |
+|--------------|-----------------------------------------------------------------|----------------------------------------------|
+| CODEGEN_001  | Configure openapi-generator-maven-plugin in pom.xml             | Updated `pom.xml` with plugin config        |
+| CODEGEN_002  | Generate API interfaces and DTOs from validated OpenAPI spec    | `target/generated-sources/openapi/`         |
+| CODEGEN_003  | Compile project to verify generated code                        | `mvn compile` passes                        |
+
+### 5. Coding Phase
 
 **Agent**: `03-coding-agent`
 
-| Skill ID    | Description                                          | Output                              |
-|-------------|------------------------------------------------------|--------------------------------------|
-| CODING_001  | Implement REST Controller from OpenAPI spec          | `*Controller.java`                   |
-| CODING_002  | Implement Service layer logic                        | `*Service.java`                      |
-| CODING_003  | Implement DTOs, Mappers, and supporting code         | Files in `dto/`, `mapper/`           |
-| CODING_004  | Compile the project to ensure validity               | `mvn compile` passes                 |
+| Skill ID    | Description                                                     | Output                              |
+|-------------|-----------------------------------------------------------------|--------------------------------------|
+| CODING_001  | Implement Controller that implements generated API interface     | `*Controller.java`                   |
+| CODING_002  | Implement Service layer logic                                    | `*Service.java`                      |
+| CODING_003  | Implement Mappers, domain models, and exception handling         | Files in `mapper/`, `model/`, `exception/` |
+| CODING_004  | Compile the project to ensure validity                           | `mvn compile` passes                 |
 
-### 4. Testing Phase
+### 6. Testing Phase
 
 **Agent**: `04-testing-agent`
 
@@ -68,8 +94,11 @@ The **Orchestrator Agent** coordinates the entire flow.
 | TESTING_002  | Generate JUnit tests for Service layer         | `*ServiceTest.java`                 |
 | TESTING_003  | Generate JUnit tests for Mapper layer          | `*MapperTest.java`                  |
 | TESTING_004  | Run the entire test suite                      | `mvn test` passes                   |
+| TESTING_005  | Generate API contract tests (spec conformance) | `*ContractTest.java`                |
 
-### 5. DevOps Phase
+**Gate**: If tests fail, route back to **Coding Phase** to fix implementation.
+
+### 7. DevOps Phase
 
 **Agent**: `05-devops-agent`
 
@@ -94,11 +123,13 @@ Feature: [describe the feature]
 ### Individual Phases
 Run specific phases independently:
 ```
-/plan-feature    — Planning only
-/design-feature  — Design only
-/code-feature    — Coding only
-/test-feature    — Testing only
-/devops-setup    — DevOps only
+/plan-feature      — Planning only
+/design-feature    — Design only
+/validate-spec     — Spec validation only
+/generate-code     — Code generation only
+/code-feature      — Coding only
+/test-feature      — Testing only
+/devops-setup      — DevOps only
 ```
 
 ---
@@ -107,10 +138,12 @@ Run specific phases independently:
 
 Each skill has a verification criterion:
 
-| Phase    | Verification                                              |
-|----------|------------------------------------------------------------|
-| Planning | `docs/planning/EPIC-{FEATURE}.md` exists and has stories  |
-| Design   | `docs/design/DESIGN-{FEATURE}.md` + OpenAPI spec exist    |
-| Coding   | `mvn compile` succeeds                                     |
-| Testing  | `mvn test` succeeds                                        |
-| DevOps   | Docker/CI-CD files exist and are syntactically valid        |
+| Phase           | Verification                                              |
+|-----------------|-----------------------------------------------------------|
+| Planning        | `docs/planning/EPIC-{FEATURE}.md` exists and has stories  |
+| Design          | `docs/design/DESIGN-{FEATURE}.md` + OpenAPI spec exist    |
+| Spec Validation | Spec passes schema validation and enterprise lint rules    |
+| Code Generation | Generated interfaces compile (`mvn generate-sources`)      |
+| Coding          | `mvn compile` succeeds                                     |
+| Testing         | `mvn test` succeeds (including contract tests)             |
+| DevOps          | Docker/CI-CD files exist and are syntactically valid        |

@@ -27,3 +27,12 @@ Thumbs.db
 
 # Environment
 .env
+/build_error.txt
+/compile_errors.txt
+/compile_errors_2.txt
+/test_output.txt
+/test_output_3.txt
+/implementation_plan.md
+/compile_errors_2.txt
+/compile_errors.txt
+/build_error.txt

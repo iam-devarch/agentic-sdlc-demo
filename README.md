@@ -1,6 +1,6 @@
 # Agentic SDLC Demo
 
-A **Spring Boot REST API microservice** built using the **Agentic SDLC** methodology — where AI agents collaborate through defined phases (Planning → Design → Coding → Testing → DevOps) to develop production-quality software.
+A **Spring Boot REST API microservice** built using the **Agentic SDLC** methodology — where AI agents collaborate through defined phases (Planning → Design → Validate → Generate → Code → Test → DevOps) to develop production-quality software using **spec-driven development**.
 
 See the [Final Walkthrough v1.0](docs/walkthrough-v1.0.md) for a detailed overview of what was built.
 
@@ -14,6 +14,7 @@ See the [Final Walkthrough v1.0](docs/walkthrough-v1.0.md) for a detailed overvi
 | Mapping     | MapStruct 1.6.3                  |
 | Validation  | Jakarta Bean Validation          |
 | Testing     | JUnit 5 + Mockito + MockMvc      |
+| Code Gen    | OpenAPI Generator Maven Plugin   |
 
 ## Quick Start
 
@@ -41,8 +42,15 @@ agentic-sdlc-demo/
 │   ├── planning/            # Epics & user stories (Planning Agent output)
 │   └── design/              # API designs & OpenAPI specs (Design Agent output)
 ├── src/
-│   ├── main/java/com/example/api/
-│   └── test/java/com/example/api/
+│   ├── main/java/com/devarch/agenticsdlc/
+│   │   ├── api/             # Generated API interfaces & DTOs (from OpenAPI spec)
+│   │   ├── controller/      # Controllers implementing generated interfaces
+│   │   ├── service/         # Business logic
+│   │   ├── model/           # Domain models
+│   │   ├── mapper/          # MapStruct mappers
+│   │   └── exception/       # Custom exceptions & handlers
+│   ├── main/resources/api/  # OpenAPI specifications (source of truth)
+│   └── test/java/com/devarch/agenticsdlc/
 ├── pom.xml
 ├── AGENTIC-SDLC-MANUAL.md  # Full SDLC process guide
 └── README.md
@@ -50,17 +58,19 @@ agentic-sdlc-demo/
 
 ## Agentic SDLC
 
-This project uses AI agents organized into phases. See [AGENTIC-SDLC-MANUAL.md](AGENTIC-SDLC-MANUAL.md) for the full process documentation.
+This project uses AI agents organized into phases with **spec-driven development** — the OpenAPI specification is the single source of truth, and API interfaces/DTOs are generated from it. See [AGENTIC-SDLC-MANUAL.md](AGENTIC-SDLC-MANUAL.md) for the full process documentation.
 
-| Phase    | Agent            | Purpose                                    |
-|----------|------------------|--------------------------------------------|
-| Plan     | Planning Agent   | Create epics, break into user stories      |
-| Design   | Design Agent     | API contracts, OpenAPI specifications      |
-| Code     | Coding Agent     | Implement controllers, services, DTOs      |
-| Test     | Testing Agent    | Generate JUnit tests, run test suite       |
-| DevOps   | DevOps Agent     | Docker, CI/CD, mocks, documentation        |
+| Phase           | Agent                | Purpose                                             |
+|-----------------|----------------------|------------------------------------------------------|
+| Plan            | Planning Agent       | Create epics, break into user stories                |
+| Design          | Design Agent         | API contracts, OpenAPI specifications                |
+| Validate ⭐     | Spec Validation Agent| Validate spec correctness, enterprise compliance     |
+| Generate ⭐     | Code Generation Agent| Generate API interfaces & DTOs from OpenAPI spec     |
+| Code            | Coding Agent         | Implement generated interfaces, services, mappers    |
+| Test            | Testing Agent        | Unit tests, contract tests, run test suite           |
+| DevOps          | DevOps Agent         | Docker, CI/CD, mocks, documentation                  |
 
-The **Orchestrator Agent** coordinates all phases in sequence.
+The **Orchestrator Agent** coordinates all phases in sequence with feedback loops.
 
 ## Workflows
 
@@ -69,6 +79,8 @@ Use Antigravity workflows to invoke the agentic SDLC:
 - `/agentic-sdlc` — Full lifecycle for a feature
 - `/plan-feature` — Planning phase only
 - `/design-feature` — Design phase only
+- `/validate-spec` — Spec validation only
+- `/generate-code` — Code generation only
 - `/code-feature` — Coding phase only
 - `/test-feature` — Testing phase only
 - `/devops-setup` — DevOps phase only
