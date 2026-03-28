@@ -3,7 +3,7 @@ package com.devarch.agenticsdlc.exception;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-import com.devarch.agenticsdlc.dto.ErrorResponse;
+import com.devarch.agenticsdlc.api.model.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,17 +19,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNotFound(ProductNotFoundException ex,
+    @ExceptionHandler({ProductNotFoundException.class, UserNotFoundException.class})
+    public ResponseEntity<ErrorResponse> handleNotFound(RuntimeException ex,
             HttpServletRequest request) {
         log.warn("Resource not found: {}", ex.getMessage());
-        ErrorResponse error = ErrorResponse.builder()
+        ErrorResponse error = new ErrorResponse()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND.value())
                 .error(HttpStatus.NOT_FOUND.getReasonPhrase())
                 .message(ex.getMessage())
-                .path(request.getRequestURI())
-                .build();
+                .path(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -40,13 +39,12 @@ public class GlobalExceptionHandler {
                 .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
                 .collect(Collectors.joining(", "));
         log.warn("Validation failed: {}", message);
-        ErrorResponse error = ErrorResponse.builder()
+        ErrorResponse error = new ErrorResponse()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .message("Validation failed: " + message)
-                .path(request.getRequestURI())
-                .build();
+                .path(request.getRequestURI());
         return ResponseEntity.badRequest().body(error);
     }
 
@@ -54,13 +52,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGeneral(Exception ex,
             HttpServletRequest request) {
         log.error("Unexpected error", ex);
-        ErrorResponse error = ErrorResponse.builder()
+        ErrorResponse error = new ErrorResponse()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
                 .message("An unexpected error occurred")
-                .path(request.getRequestURI())
-                .build();
+                .path(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }

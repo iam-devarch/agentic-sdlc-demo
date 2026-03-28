@@ -1,0 +1,33 @@
+extends:
+  - spectral:oas
+
+rules:
+  operation-operationId: error
+  operation-summary: warn
+  oas3-api-servers: warn
+  info-description: warn
+  operation-description: warn
+  path-params: error
+  no-eval-in-markdown: error
+  no-script-tags-in-markdown: error
+
+  # Custom enterprise rules
+  paths-kebab-case:
+    description: Paths should use kebab-case
+    given: "$.paths"
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        match: "^(/[a-z0-9\\-{}]+)+$"
+    severity: error
+
+  error-response-schema:
+    description: Error responses should reference ErrorResponse schema
+    given: "$.paths.*.*.responses[?(@property >= '400' && @property < '600')].content.application/json.schema"
+    then:
+      field: "$ref"
+      function: pattern
+      functionOptions:
+        match: "ErrorResponse"
+    severity: warn

@@ -84,3 +84,18 @@ Use Antigravity workflows to invoke the agentic SDLC:
 - `/code-feature` — Coding phase only
 - `/test-feature` — Testing phase only
 - `/devops-setup` — DevOps phase only
+
+## Feature: Wishlist
+
+Allows users to manage a personal list of products they are interested in.
+
+### API Endpoints
+- `GET /api/v1/wishlist/{userId}` — Get or create user wishlist
+- `POST /api/v1/wishlist/{userId}/add/{productId}` — Add product to wishlist
+- `DELETE /api/v1/wishlist/{userId}/remove/{productId}` — Remove product from wishlist
+
+### Implementation Details
+- Uses MapStruct for DTO mapping.
+- In-memory storage with `ConcurrentHashMap`.
+- Automatic wishlist creation on first access/add.
+- Duplicate prevention for products within a wishlist.

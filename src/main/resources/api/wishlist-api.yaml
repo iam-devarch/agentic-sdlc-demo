@@ -1,0 +1,154 @@
+openapi: 3.0.3
+info:
+  title: Wishlist API
+  description: API for managing user wishlists in the e-commerce backend.
+  version: 1.0.0
+
+servers:
+  - url: /api/v1
+    description: v1 Base Path
+
+paths:
+  /wishlist/{userId}:
+    get:
+      tags:
+        - wishlist
+      summary: Get user wishlist
+      operationId: getWishlist
+      description: Retrieves the wishlist for a specific user.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WishlistDto'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /wishlist/{userId}/add/{productId}:
+    post:
+      tags:
+        - wishlist
+      summary: Add product to wishlist
+      operationId: addProductToWishlist
+      description: Adds a product to the user's wishlist. Creates it if it doesn't exist.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WishlistDto'
+        '404':
+          description: User or Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /wishlist/{userId}/remove/{productId}:
+    delete:
+      tags:
+        - wishlist
+      summary: Remove product from wishlist
+      operationId: removeProductFromWishlist
+      description: Removes a product from the user's wishlist.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    WishlistDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductDto'
+      required:
+        - id
+        - userId
+
+    ProductDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          format: double
+      required:
+        - id
+        - name
+        - price
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
