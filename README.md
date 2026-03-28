@@ -60,15 +60,15 @@ agentic-sdlc-demo/
 
 This project uses AI agents organized into phases with **spec-driven development** — the OpenAPI specification is the single source of truth, and API interfaces/DTOs are generated from it. See [AGENTIC-SDLC-MANUAL.md](AGENTIC-SDLC-MANUAL.md) for the full process documentation.
 
-| Phase           | Agent                | Purpose                                             |
-|-----------------|----------------------|------------------------------------------------------|
-| Plan            | Planning Agent       | Create epics, break into user stories                |
-| Design          | Design Agent         | API contracts, OpenAPI specifications                |
-| Validate ⭐     | Spec Validation Agent| Validate spec correctness, enterprise compliance     |
-| Generate ⭐     | Code Generation Agent| Generate API interfaces & DTOs from OpenAPI spec     |
-| Code            | Coding Agent         | Implement generated interfaces, services, mappers    |
-| Test            | Testing Agent        | Unit tests, contract tests, run test suite           |
-| DevOps          | DevOps Agent         | Docker, CI/CD, mocks, documentation                  |
+| Phase           | Agent                                                                   | Purpose                                             |
+|-----------------|-------------------------------------------------------------------------|------------------------------------------------------|
+| Plan            | [Planning Agent](.agent/skills/01-planning-agent/SKILL.md)           | Create epics, break into user stories                |
+| Design          | [Design Agent](.agent/skills/02-design-agent/SKILL.md)             | API contracts, OpenAPI specifications                |
+| Validate ⭐     | [Spec Validation Agent](.agent/skills/02a-spec-validation-agent/SKILL.md) | Validate spec correctness, enterprise compliance     |
+| Generate ⭐     | [Code Generation Agent](.agent/skills/02b-codegen-agent/SKILL.md) | Generate API interfaces & DTOs from OpenAPI spec      |
+| Code            | [Coding Agent](.agent/skills/03-coding-agent/SKILL.md)             | Implement generated interfaces, services, mappers    |
+| Test            | [Testing Agent](.agent/skills/04-testing-agent/SKILL.md)           | Unit tests, contract tests, run test suite           |
+| DevOps          | [DevOps Agent](.agent/skills/05-devops-agent/SKILL.md)             | Docker, CI/CD, mocks, documentation                  |
 
 The **Orchestrator Agent** coordinates all phases in sequence with feedback loops.
 
@@ -76,14 +76,16 @@ The **Orchestrator Agent** coordinates all phases in sequence with feedback loop
 
 Use Antigravity workflows to invoke the agentic SDLC:
 
-- `/agentic-sdlc` — Full lifecycle for a feature
-- `/plan-feature` — Planning phase only
-- `/design-feature` — Design phase only
-- `/validate-spec` — Spec validation only
-- `/generate-code` — Code generation only
-- `/code-feature` — Coding phase only
-- `/test-feature` — Testing phase only
-- `/devops-setup` — DevOps phase only
+| Workflow | Description |
+|----------|-------------|
+| [`/agentic-sdlc`](.agent/workflows/agentic-sdlc.md) | Full lifecycle for a feature |
+| [`/plan-feature`](.agent/workflows/plan-feature.md) | Planning phase only |
+| [`/design-feature`](.agent/workflows/design-feature.md) | Design phase only |
+| [`/validate-spec`](.agent/workflows/validate-spec.md) | Spec validation only |
+| [`/generate-code`](.agent/workflows/generate-code.md) | Code generation only |
+| [`/code-feature`](.agent/workflows/code-feature.md) | Coding phase only |
+| [`/test-feature`](.agent/workflows/test-feature.md) | Testing phase only |
+| [`/devops-setup`](.agent/workflows/devops-setup.md) | DevOps phase only |
 
 ## Feature: Wishlist
 
